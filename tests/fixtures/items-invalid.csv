@@ -1,0 +1,3 @@
+sku,name,description,unitOfMeasure,reorderLevel,category
+BOLT-M8-100,Duplicate bolt,Existing SKU test,box,10,Hardware
+BAD-REORDER,Bad reorder,Invalid number test,piece,-2,Hardware

@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  MANAGER
+  STAFF
+}
+
+enum MovementKind {
+  RECEIPT
+  ISSUE
+  TRANSFER
+  ADJUSTMENT
+}
+
+enum TimelineEntryType {
+  CREATED
+  FIELD_CHANGED
+  NOTE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole
+  managerId    String?
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  manager               User?                     @relation("ManagerStaff", fields: [managerId], references: [id], onDelete: SetNull)
+  staffMembers          User[]                    @relation("ManagerStaff")
+  assignedLocations     StaffLocationAssignment[] @relation("StaffAssignments")
+  assignmentsCreated    StaffLocationAssignment[] @relation("AssignmentsCreatedBy")
+  createdItems          Item[]                    @relation("ItemsCreatedBy")
+  recordedMovements     StockMovement[]           @relation("MovementsRecordedBy")
+  timelineEntries       ItemTimelineEntry[]       @relation("TimelineActor")
+  lowStockDismissals    LowStockAlertDismissal[]  @relation("AlertDismissedBy")
+
+  @@index([managerId])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items Item[]
+}
+
+model Location {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  staffAssignments    StaffLocationAssignment[]
+  movements           StockMovement[] @relation("MovementLocation")
+  transferSources     StockMovement[] @relation("MovementSourceLocation")
+  transferDestinations StockMovement[] @relation("MovementDestinationLocation")
+}
+
+model StaffLocationAssignment {
+  id           String   @id @default(cuid())
+  staffId      String
+  locationId   String
+  assignedById String?
+  createdAt    DateTime @default(now())
+
+  staff      User      @relation("StaffAssignments", fields: [staffId], references: [id], onDelete: Cascade)
+  location   Location  @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  assignedBy User?     @relation("AssignmentsCreatedBy", fields: [assignedById], references: [id], onDelete: SetNull)
+
+  @@unique([staffId, locationId])
+  @@index([locationId])
+}
+
+model Item {
+  id            String    @id @default(cuid())
+  sku           String    @unique
+  name          String
+  description   String?
+  unitOfMeasure String
+  reorderLevel  Int
+  categoryId    String
+  createdById   String?
+  archivedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  category          Category                 @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  createdBy         User?                    @relation("ItemsCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  movements         StockMovement[]
+  timelineEntries   ItemTimelineEntry[]
+  alertDismissals   LowStockAlertDismissal[]
+
+  @@index([categoryId])
+  @@index([archivedAt])
+  @@index([name])
+}
+
+model StockMovement {
+  id                    String       @id @default(cuid())
+  itemId                String
+  kind                  MovementKind
+  quantity              Int
+  locationId            String
+  sourceLocationId      String?
+  destinationLocationId String?
+  reason                String?
+  recordedById          String
+  createdAt             DateTime     @default(now())
+
+  item                Item      @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  location            Location  @relation("MovementLocation", fields: [locationId], references: [id], onDelete: Restrict)
+  sourceLocation      Location? @relation("MovementSourceLocation", fields: [sourceLocationId], references: [id], onDelete: Restrict)
+  destinationLocation Location? @relation("MovementDestinationLocation", fields: [destinationLocationId], references: [id], onDelete: Restrict)
+  recordedBy          User      @relation("MovementsRecordedBy", fields: [recordedById], references: [id], onDelete: Restrict)
+
+  @@index([itemId, createdAt])
+  @@index([locationId])
+  @@index([recordedById])
+  @@index([kind, createdAt])
+}
+
+model ItemTimelineEntry {
+  id        String            @id @default(cuid())
+  itemId    String
+  type      TimelineEntryType
+  fieldName String?
+  oldValue  String?
+  newValue  String?
+  note      String?
+  actorId   String?
+  createdAt DateTime          @default(now())
+
+  item  Item  @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  actor User? @relation("TimelineActor", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([itemId, createdAt])
+  @@index([actorId])
+}
+
+model LowStockAlertDismissal {
+  id               String    @id @default(cuid())
+  itemId           String
+  dismissedById    String
+  stockAtDismissal Int
+  dismissedAt      DateTime  @default(now())
+  resolvedAt       DateTime?
+
+  item        Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  dismissedBy User @relation("AlertDismissedBy", fields: [dismissedById], references: [id], onDelete: Restrict)
+
+  @@index([itemId, resolvedAt])
+  @@index([dismissedById])
+}

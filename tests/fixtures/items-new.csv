@@ -1,0 +1,7 @@
+sku,name,description,unitOfMeasure,reorderLevel,category
+CLEAN-SOAP-500,Hand Soap 500ml,Liquid hand soap for washrooms,bottle,12,Cleaning Supplies
+CLEAN-TISSUE-100,Facial Tissue Box,Box containing 100 facial tissues,box,15,Cleaning Supplies
+SAFE-GLOVE-L,Work Gloves Large,Protective work gloves,pair,10,Safety Equipment
+SAFE-MASK-N95,N95 Safety Mask,Disposable protective face mask,piece,25,Safety Equipment
+OFFICE-STAPLER-M,Desktop Stapler,Standard medium desktop stapler,piece,6,Office Supplies
+ELEC-POWERSTRIP-6,6 Outlet Power Strip,Power strip with six outlets,piece,8,Electrical

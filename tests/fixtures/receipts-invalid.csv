@@ -1,0 +1,3 @@
+sku,quantity,location,reason
+UNKNOWN-SKU,5,Main Warehouse,Unknown item test
+BOLT-M8-100,0,Main Warehouse,Invalid quantity test

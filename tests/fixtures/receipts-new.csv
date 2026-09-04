@@ -1,0 +1,12 @@
+sku,quantity,location,reason
+CLEAN-SOAP-500,40,Central Warehouse,Initial supplier delivery
+CLEAN-SOAP-500,12,Store Counter,Opening counter stock
+CLEAN-TISSUE-100,50,Central Warehouse,Initial supplier delivery
+CLEAN-TISSUE-100,20,Store Counter,Opening counter stock
+SAFE-GLOVE-L,30,Central Warehouse,Safety equipment delivery
+SAFE-GLOVE-L,8,Returns Bay,Stock for returns handling
+SAFE-MASK-N95,100,Central Warehouse,Safety stock delivery
+OFFICE-STAPLER-M,15,Central Warehouse,Office supply delivery
+OFFICE-STAPLER-M,5,Store Counter,Opening counter stock
+ELEC-POWERSTRIP-6,25,Central Warehouse,Electrical supply delivery
+ELEC-POWERSTRIP-6,6,Store Counter,Opening counter stock
