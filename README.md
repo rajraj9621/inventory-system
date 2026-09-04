@@ -2,6 +2,10 @@
 
 Inventory Stock Control is a full-stack inventory application for teams that manage stock across multiple locations. It provides a permanent stock ledger, role-based access, low-stock monitoring, CSV tools, operational dashboards, and complete item history.
 
+**Live application:** [inventory-system-peach-omega.vercel.app](https://inventory-system-peach-omega.vercel.app)
+
+**GitHub repository:** [rajraj9621/inventory-system](https://github.com/rajraj9621/inventory-system)
+
 ## What The Application Does
 
 - Maintains an item catalog with unique SKUs, categories, units, and reorder levels.
@@ -203,9 +207,10 @@ The application is designed for Vercel with Supabase as the persistent database.
 
 1. Push the repository to GitHub.
 2. Import the GitHub repository into Vercel.
-3. Add `DATABASE_URL`, `JWT_SECRET`, and `NEXT_PUBLIC_APP_URL` in Vercel Project Settings.
+3. Add `DATABASE_URL` and `JWT_SECRET` in Vercel Project Settings.
 4. Deploy the project.
-5. Set `NEXT_PUBLIC_APP_URL` to the final HTTPS deployment URL and redeploy if necessary.
+
+This repository is connected to Vercel, so pushes to `main` create production deployments automatically.
 
 Database migrations and seed data should be applied from a trusted development environment before the first production deployment.
 

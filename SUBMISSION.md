@@ -2,8 +2,8 @@
 
 ## Links
 
-- **GitHub repository:** Pending publication
-- **Live application:** Pending deployment
+- **GitHub repository:** https://github.com/rajraj9621/inventory-system
+- **Live application:** https://inventory-system-peach-omega.vercel.app
 
 ## Notes for the reviewer
 
