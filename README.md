@@ -201,6 +201,8 @@ npm run build
 
 The application has also been checked against the connected Supabase database for negative balances, malformed transfers, duplicate SKUs, invalid adjustments, archived-item activity, manager/staff access, and production page response times.
 
+To check database API permissions without changing records, run `npm run db:security-check`. The check requires the existing server-side `DATABASE_URL` and verifies that Supabase's public API roles cannot read or write the inventory tables.
+
 ## Deployment
 
 The application is designed for Vercel with Supabase as the persistent database.
@@ -213,6 +215,8 @@ The application is designed for Vercel with Supabase as the persistent database.
 This repository is connected to Vercel, so pushes to `main` create production deployments automatically.
 
 Database migrations and seed data should be applied from a trusted development environment before the first production deployment.
+
+For an existing database, apply committed migrations with `npm run db:deploy`. The RLS security migration only changes permissions and preserves existing accounts and inventory. Do not run development reset commands or reseed an existing production database as part of deployment. Keep `DATABASE_URL` and `JWT_SECRET` in server-side environment variables.
 
 ## Additional Documentation
 

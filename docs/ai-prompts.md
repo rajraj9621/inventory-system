@@ -83,3 +83,7 @@ Bounded CSV processing, row-level success/failure reasons, ledger-derived export
 ### What you corrected
 
 Kept imports manager-only, limited file size and row count, escaped spreadsheet formula prefixes in exports, and reused the same stock calculation helpers throughout the application.
+
+## Supabase security warning
+
+Investigated a Supabase `rls_disabled_in_public` warning. Added a permissions-only migration enabling RLS and revoking direct client access on inventory and migration tables, while retaining server-side Prisma access. Added repeatable checks for actual API-role permission denials and private default grants. Existing application records must be preserved when applying this change.

@@ -25,6 +25,10 @@
 
 The database enforces uniqueness, required fields, foreign keys, and many-to-many uniqueness. Application code enforces conditional business rules: adjustment reason required, archived items cannot receive movements, staff can only use assigned locations, transfer source/destination rules, and movements cannot drive stock negative.
 
+## Database permissions
+
+All application tables and `_prisma_migrations` enable RLS. `PUBLIC`, `anon`, and `authenticated` have no direct table privileges, and no API access policies are installed. Application users access data through authenticated Next.js server code using Prisma. The `20260909080000_lock_down_public_api` migration changes permissions only; it does not rewrite or delete application rows. Future Prisma table migrations must enable RLS and retain private default grants.
+
 ## Denormalisation
 
 The schema does not store item on-hand quantity. Stock is derived from ledger rows. `LowStockAlertDismissal.stockAtDismissal` is intentionally stored as a snapshot so reviewers can see why an alert was dismissed at that time.

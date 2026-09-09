@@ -18,6 +18,12 @@
 
 The UI hides unavailable controls, but Server Actions are the authorization boundary. A crafted POST request is subject to the same role, ownership, assignment, archive, and stock checks.
 
+## Database API boundary
+
+The app uses its own JWT cookies and server-only Prisma connection, not Supabase Auth or a browser Supabase client. All eight application tables and `_prisma_migrations` have Row Level Security enabled without client access policies. Table privileges are revoked from `PUBLIC`, `anon`, and `authenticated`, so the Supabase REST/GraphQL APIs cannot bypass the application's authorization checks. The server's database role retains owner/BYPASSRLS access.
+
+The security migration also removes automatic client grants on future tables and sequences created by the migration role in `public`. New table migrations must enable RLS explicitly. Objects created by another database role require their own permissions review. `npm run db:security-check` verifies RLS, inherited and column privileges, default grants, server reads, and actual permission denials for both API roles without modifying application records.
+
 ## Inventory flow
 
 `StockMovement` is append-only. Receipts add stock, issues subtract stock, transfers move stock between two locations without changing the item total, and signed adjustments require a reason. On-hand totals are calculated with grouped database queries and shared stock helpers. Serializable movement transactions prevent concurrent issue or transfer requests from producing negative stock.

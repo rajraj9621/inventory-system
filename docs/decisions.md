@@ -67,3 +67,9 @@
 - **Chose:** Use a small PostgreSQL pool with bounded queries and one retry for transient reads.
 - **Rejected:** Open many parallel connections or automatically retry uncertain stock writes.
 - **Why:** Supabase session-pooler connections are limited, while duplicate inventory mutations would be more harmful than a visible retry message.
+
+## Decision 12
+
+- **Chose:** Enable RLS and remove Supabase client-role grants on the server-owned inventory tables.
+- **Rejected:** Public API access or broad `USING (true)` policies to silence the security advisor.
+- **Why:** This app authenticates with its own JWT cookies and accesses PostgreSQL through Prisma. Supabase API roles do not represent the application's manager/staff sessions. Denying their table access closes an alternate path around server authorization while preserving the existing server connection and records. Private default grants and a read-only security check help catch regressions.
